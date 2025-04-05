@@ -1,0 +1,1 @@
+{"version":"1.0","connections":[{"details":{"protocol":"mysql","address":{"server":"bizserver.mysql.database.azure.com","database":"gold_db"}},"options":{"ReturnSingleDatabase":true}}]}
