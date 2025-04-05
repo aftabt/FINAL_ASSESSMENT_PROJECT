@@ -1,111 +1,218 @@
-# FINAL_ASSESSMENT_PROJECT
-Repository contain project on "Scope of Work (SoW) for Transportation &amp; Logistics Data Processing &amp; Analysis"
-Transportation Analytics Project
-Project Overview
-This project focuses on processing and analyzing transportation and logistics data using PySpark, MySQL, and Power BI, following the Medallion Architecture. The goal is to ingest, clean, transform, and aggregate data related to transportation routes, vehicle performance, delivery times, and shipment statuses to generate meaningful business insights.
-The solution provides a fully automated data pipeline from raw data ingestion to visualization, with proper auditing at each stage. Data engineers only need to add new data to the raw files - the pipeline then triggers automatically and updates the Power BI dashboard with fresh insights.
-Architecture
-The entire project is built on Microsoft Azure platform, following the Medallion Architecture for data processing:
-Software & Tools Used
+# 🚚 Transportation & Logistics Data Platform using Medallion Architecture
 
-Azure Blob Storage: Stores raw data files
-Azure Data Lake Storage Gen2: Implements medallion architecture layers
-Azure Databricks Service: Runs PySpark scripts for data processing
-Azure Database for MySQL server: Stores transformed data & final aggregated results
-Azure Data Factory: Orchestrates and automates the entire pipeline
-Power BI: Visualizes data & provides interactive dashboards
+## 📘 Abstract
 
-Medallion Architecture Components
-The project follows a structured three-layer approach:
+This project focuses on processing and analyzing transportation and logistics data using **PySpark**, **MySQL**, and **Power BI**, all orchestrated within the **Microsoft Azure ecosystem**. The objective is to build a **scalable, automated data platform** using the **Medallion Architecture**, from raw data ingestion to final dashboard reporting.
 
-Bronze Layer: Stores raw data with minimal processing (Parquet files)
-Silver Layer: Contains cleansed, transformed, and enriched data (Parquet & MySQL tables)
-Gold Layer: Houses aggregated data optimized for reporting & dashboards (MySQL tables)
+Data engineers or customers simply need to add new data to raw files — the entire pipeline gets triggered automatically, and updated insights are reflected on the Power BI dashboard.
 
-Data Processing Pipeline
-The automated data pipeline performs the following operations:
-Bronze Layer Processing
+---
 
-Copies raw CSV data files to bronze container with parquet format
-Adds audit columns (ingestion_date, source_file) to track data lineage
-Generates detailed logs for each file processing operation
+## 🧭 Table of Contents
 
-Silver Layer Transformations
+1. [Technologies Used](#technologies-used)
+2. [Medallion Architecture Overview](#medallion-architecture-overview)
+3. [Platform Setup](#platform-setup)
+   - Azure Resource Group
+   - Azure Blob Storage (Raw)
+   - Azure Data Lake Gen2 (Bronze, Silver, Gold)
+   - Azure MySQL Database
+   - Azure Databricks
+   - Azure Data Factory
+4. [Bronze Layer Implementation](#bronze-layer-implementation)
+5. [Silver Layer Implementation](#silver-layer-implementation)
+6. [Gold Layer Implementation](#gold-layer-implementation)
+7. [Power BI Dashboard](#power-bi-dashboard)
+8. [Conclusion](#conclusion)
 
-Data Cleaning: Removes records with null values in critical columns
-Table Joins: Combines vehicle details, driver details, and route information
-Feature Engineering: Computes additional fields like fuel_consumed = distance_covered / fuel_efficiency
-Data Type Conversion: Ensures proper data types for analytics
-Storage: Stores transformed data in both Parquet format and MySQL tables
+---
 
-Gold Layer Aggregations
-The gold layer performs advanced analytics:
+## 🛠️ Technologies Used
 
-Route Optimization Analysis: Analyzes delivery times and fuel consumption by route
-Fleet Performance Analysis: Evaluates vehicle performance metrics
-Driver Performance Analysis: Measures driver efficiency and ratings
-Unified Gold Table: Combines all aggregations into a comprehensive analytics table
-Dual Storage: Saves results in both Parquet files and MySQL tables
+- Microsoft Azure (Blob Storage, Data Lake Gen2, ADF, Databricks, MySQL)
+- PySpark (Data Processing & Transformation)
+- MySQL Workbench (SQL queries & schema creation)
+- Azure Data Factory (Pipeline Automation)
+- Power BI (Data Visualization & Reporting)
 
-Power BI Dashboard
-The final dashboard provides key business insights through:
-Key Performance Indicators (KPIs)
+---
 
-Total Deliveries: Sum of deliveries per route/vehicle/driver
-Average Delivery Time: Average time per route/vehicle/driver
-Fuel Efficiency: Average fuel efficiency per vehicle
-Driver Performance: Average driver rating
-Delivery Status: Completed vs Failed deliveries
+## 🧱 Medallion Architecture Overview
 
-Interactive Visualizations
+- **Bronze Layer:** Stores raw data (Parquet format) with audit logs.
+- **Silver Layer:** Cleaned, structured, and enriched data.
+- **Gold Layer:** Aggregated data ready for reporting and visualization.
 
-Route Optimization Chart: Line chart showing average delivery times and fuel consumption per route
-Fleet Performance Analysis: Bar chart visualizing total deliveries per vehicle and fuel efficiency
-Driver Performance Analysis: Scatter plot for driver performance metrics
-Delivery Status Distribution: Pie chart showing the distribution of completed and failed deliveries
-Time-based Delivery Trends: Line chart showing monthly/weekly delivery performance trends
+---
 
-Interactive Filters
+## ⚙️ Platform Setup
 
-Filter by delivery status (completed/failed)
-Filter by route name
-Filter by driver name
+### Microsoft Azure Overview
+![IMAGE 1](#)
 
-Project Structure
-Copy├── Azure Resources 
-│   ├── bizblobstore (Azure Blob Storage)
-│   │   └── raw (container for raw CSV files)
-│   ├── bizlakegen (Azure Data Lake Storage Gen2)
-│   │   ├── bronze (container for parquet files)
-│   │   ├── silver (container for transformed data)
-│   │   └── gold (container for aggregated data)
-│   ├── bizserver (Azure Database for MySQL server)
-│   │   ├── silver_db (schema for silver layer)
-│   │   └── gold_db (schema for gold layer)
-│   ├── BizWorkSpace (Azure Databricks Service)
-│   └── bizdatafactory (Azure Data Factory)
-│       ├── datasets (14 different datasets)
-│       ├── dataflows (Silver layer transformations)
-│       └── pipelines (End-to-end orchestration)
-├── SQL
-│   ├── silver_db.sql (SQL script for silver layer)
-│   └── gold_db.sql (SQL script for gold layer)
-├── Databricks
-│   └── gold_layer_aggregation.ipynb (PySpark notebook)
-└── PowerBI
-    └── transportation_dashboard.pbix (Power BI dashboard)
-Setup Instructions
+### Azure Resource Group - BizRG
+Contains all services like Storage Accounts, Data Factory, MySQL, and Databricks.  
+![IMAGE 2](#)
 
-Set up Azure resources as described in the project structure
-Configure Azure Data Factory connections
-Import the SQL scripts into MySQL workbench
-Import the Databricks notebook
-Connect Power BI to the Gold layer MySQL database
+### Azure Blob Storage - bizblobstore (Raw Data)
+Container: `raw/` containing 4 CSV files.  
+![IMAGE 3](#)  
+![IMAGE 4](#)
 
-Future Enhancements
+### Azure Data Lake Gen2 - bizlakegen (Medallion Layers)
+Containers: `bronze/`, `silver/`, `gold/`  
+![IMAGE 5](#)  
+![IMAGE 6](#)
 
-Add real-time data processing capabilities
-Implement machine learning models for predictive analytics
-Expand the dashboard with additional visualizations
-Add alert systems for critical performance metrics
+### Azure MySQL Database
+Created a Flexible Server and connected to MySQL Workbench.  
+![IMAGE 7](#)  
+![IMAGE 8](#)
+
+### Azure Databricks
+Service: BizWorkspace  
+Notebook used for gold layer aggregation.  
+![IMAGE 9](#)
+
+### Azure Data Factory (ADF) - bizdatafactory
+All orchestration and pipeline automation.  
+![IMAGE 10](#)
+
+---
+
+## 🥉 Bronze Layer Implementation
+
+- **Source:** CSV files from Blob Storage
+- **Process:** Copy activity with audit columns (`ingestion_date`, `source_file`)
+- **Destination:** Parquet format in Bronze container
+
+#### Connections and Datasets
+![IMAGE 11](#)  
+![IMAGE 12](#)
+
+#### Copy Activities for Each File
+![IMAGE 13](#)  
+![IMAGE 14](#)  
+![IMAGE 15](#)  
+![IMAGE 16](#)  
+![IMAGE 17](#)  
+![IMAGE 18](#)
+
+#### Sample Data and Logs
+![IMAGE 19](#)  
+![IMAGE 20](#)
+
+---
+
+## 🥈 Silver Layer Implementation
+
+### Process (via Data Flow)
+1. Filter nulls
+2. Select relevant features
+3. Join all 4 data sources
+4. Compute new columns: `fuel_consumed`, `processed_date`, `route_name`
+5. Type casting
+6. Store in MySQL (`silver_db`) and Silver container
+
+#### Data Flow Steps
+![IMAGE 20](#)  
+![IMAGE 21](#)  
+![IMAGE 22](#)  
+![IMAGE 23](#)  
+![IMAGE 24](#)  
+![IMAGE 25](#)  
+![IMAGE 26](#)  
+![IMAGE 27](#)  
+![IMAGE 28](#)  
+![IMAGE 29](#)  
+![IMAGE 30](#)
+
+#### MySQL Silver DB Setup
+![IMAGE 31](#)  
+![IMAGE 32](#)  
+![IMAGE 33](#)
+
+#### Final Silver Output
+- **Parquet in Silver Container:**  
+  ![IMAGE 34](#)
+- **MySQL Table in `silver_db`:**  
+  ![IMAGE 35](#)
+
+---
+
+## 🥇 Gold Layer Implementation
+
+### Process (via PySpark in Databricks)
+1. Read `silver_db.delivery_data_silver` table
+2. Perform Aggregations:
+   - Route Optimization
+   - Fleet Performance
+   - Driver Performance
+3. Join and prepare final Gold Table
+4. Write to:
+   - `gold_db` in MySQL
+   - `gold/` container as Parquet
+5. Include logging file
+
+#### Databricks Cluster & Notebook
+![IMAGE 36](#)  
+![IMAGE 37](#)
+
+#### Notebook Deployed in Pipeline
+![IMAGE 38](#)  
+![IMAGE 39](#)
+
+#### Gold Table Outputs
+- **MySQL Table (`gold_db.transportation_gold`)**  
+  ![IMAGE 40](#)
+- **Gold Container with Logging File**  
+  ![IMAGE 41](#)  
+  ![IMAGE 42](#)
+
+---
+
+## 📊 Power BI Dashboard
+
+Connected to `gold_db.transportation_gold` via MySQL connector from Azure Server.  
+![IMAGE 43](#)
+
+### KPIs Displayed:
+1. **Total Deliveries**
+2. **Average Delivery Time**
+3. **Fuel Efficiency**
+4. **Driver Performance**
+5. **Delivery Status**
+
+### Dashboard Preview
+![IMAGE 44](#)
+
+### Filters & Visualizations:
+- **Slicers:**
+  - Delivery Status
+  - Route Name
+  - Driver Name
+- **Charts:**
+  - Route Optimization (Line)
+  - Fleet Performance (Bar)
+  - Driver Performance (Scatter)
+  - Delivery Status Distribution (Pie)
+  - Time-based Trends (Line)
+
+#### Example Dashboards:
+- **Filtered by Deliveries Completed:**  
+  ![IMAGE 45](#)
+- **Filtered by Route & Driver Name:**  
+  ![IMAGE 46](#)
+
+---
+
+## ✅ Conclusion
+
+This end-to-end data engineering project demonstrates the power of **automated pipelines** using the **Medallion Architecture**. From raw CSVs to a dynamic business dashboard, the system is designed to scale and adapt with minimal user input.
+
+Once raw data is uploaded, everything from processing to visualization is **triggered automatically**, showcasing the synergy of **Azure + PySpark + Power BI**.
+
+---
+
+## 📂 Folder Structure (Optional)
 
